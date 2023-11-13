@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alumnos API Interface</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5">Alumnos</h1>
+
+        <!-- Botón para abrir modal de nuevo alumno -->
+        <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#modalNuevoAlumno">Agregar Alumno</button>
+
+        <!-- Tabla de Alumnos -->
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Apellido Paterno</th>
+                    <th>Apellido Materno</th>
+                    <th>CURP</th>
+                    <th>Fecha Nacimiento</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- Los alumnos se llenarán aquí -->
+            </tbody>
+        </table>
+    </div>
+
+    <div class="modal fade" id="modalNuevoAlumno" tabindex="-1" role="dialog" aria-labelledby="modalNuevoAlumnoLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalNuevoAlumnoLabel">Registrar Nuevo Alumno</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="formNuevoAlumno">
+                        <div class="form-group">
+                            <label for="nombre">Nombre:</label>
+                            <input type="text" class="form-control" id="nombre" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="apPaterno">Apellido Paterno:</label>
+                            <input type="text" class="form-control" id="apPaterno" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="apMaterno">Apellido Materno:</label>
+                            <input type="text" class="form-control" id="apMaterno" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="curp">CURP:</label>
+                            <input type="text" class="form-control" id="curp" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="fechNac">Fecha de Nacimiento:</label>
+                            <input type="date" class="form-control" id="fechNac" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary" onclick="guardarAlumno()">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
