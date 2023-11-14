@@ -134,7 +134,8 @@ async function modificarEstado(idAlumno) {
 
     const datos = {
         idAlumno: idAlumno,
-        curp: "" // Parece que este campo no es necesario para este endpoint
+        curp: "",
+        texto: "" // Parece que este campo no es necesario para este endpoint
     };
 
     fetch('http://localhost:50586/api/Alumnos/CambiaEstadoAlumno', {
@@ -168,7 +169,7 @@ async function editarAlumno(idAlumno) {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${jwtToken}`
         },
-        body: JSON.stringify({ idAlumno: idAlumno, curp: "" })
+        body: JSON.stringify({ idAlumno: idAlumno, curp: "", texto: "" })
     })
     .then(response => response.json())
     .then(data => {
@@ -251,7 +252,7 @@ async function eliminarAlumno(idAlumno) {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${jwtToken}`
             },
-            body: JSON.stringify({ idAlumno: idAlumno, curp: "" })
+            body: JSON.stringify({ idAlumno: idAlumno, curp: "", texto: "" })
         })
         .then(response => response.json())
         .then(data => {
@@ -266,6 +267,40 @@ async function eliminarAlumno(idAlumno) {
         .catch(error => console.error('Error:', error));
     }
 }
+
+async function buscarAlumnosPorTexto() {
+    const textoBusqueda = document.getElementById("busquedaTextoInput").value;
+    if (!textoBusqueda) {
+        cargarAlumnos(); // Si la búsqueda está vacía, carga todos los alumnos
+        return;
+    }
+
+    await solicitarToken();
+
+    fetch('http://localhost:50586/api/Alumnos/GetAlumnoTexto', { 
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${jwtToken}`
+        },
+        body: JSON.stringify({ idAlumno: 0, curp: "", texto: textoBusqueda })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data && data.respuesta) {
+            llenarTabla(data.respuesta);
+        } else {
+            console.error('No se encontraron resultados');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+function limpiarFiltrosYMostrarTodos() {
+    document.getElementById("busquedaTextoInput").value = ''; // Limpiar campo de búsqueda
+    cargarAlumnos(); // Cargar todos los alumnos de nuevo
+}
+
 
 
 

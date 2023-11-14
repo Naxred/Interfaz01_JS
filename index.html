@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alumnos API Interface</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
+
 </head>
 <body>
     <div class="container">
@@ -13,8 +15,17 @@
         <!-- Botón para abrir modal de nuevo alumno -->
         <button class="btn btn-primary mb-3" data-toggle="modal" data-target="#modalNuevoAlumno">Agregar Alumno</button>
 
+        <!-- Campo de Búsqueda -->
+        <div class="mt-3 mb-3">
+            <input type="text" id="busquedaTextoInput" placeholder="Buscar por texto" class="form-control">
+            <button class="btn btn-primary mt-2" onclick="buscarAlumnosPorTexto()">Buscar</button>
+        </div>
+
+        <!-- Botón para limpiar búsqueda y mostrar todos los alumnos -->
+        <button class="btn btn-secondary mt-2" onclick="limpiarFiltrosYMostrarTodos()">Limpiar Filtros</button>
+
         <!-- Tabla de Alumnos -->
-        <table class="table">
+        <table class="table" id="TablaDatos">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -129,5 +140,11 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="script.js"></script>
+    <!-- Incluir jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+    <!-- Incluir JS de DataTables -->
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+
 </body>
 </html>
