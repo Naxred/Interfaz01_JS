@@ -187,7 +187,7 @@ async function editarAlumno(idAlumno) {
             document.getElementById("editFechNac").value = fechaNacimiento;
             // Mostrar el modal
             $('#modalEditarAlumno').modal('show');
-            console.log(alumno);
+            // console.log(alumno);
         } else {
             console.error('No se pudo obtener la información del alumno');
         }
@@ -237,6 +237,34 @@ function limpiarModalEdicionAlumno() {
     document.getElementById("editApMaterno").value = '';
     document.getElementById("editCurp").value = '';
     document.getElementById("editFechNac").value = '';
+}
+
+
+async function eliminarAlumno(idAlumno) {
+    const confirmacion = confirm("¿Estás seguro de que deseas eliminar a este alumno?");
+    if (confirmacion) {
+        await solicitarToken();
+
+        fetch('http://localhost:50586/api/Alumnos/EliminaAlumno', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${jwtToken}`
+            },
+            body: JSON.stringify({ idAlumno: idAlumno, curp: "" })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.codigo && data.codigo === "00") {
+                // Éxito en la eliminación
+                cargarAlumnos(); // Recargar la lista de alumnos
+            } else {
+                // Manejar respuesta de error
+                alert("Error al eliminar el alumno.");
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
 }
 
 
