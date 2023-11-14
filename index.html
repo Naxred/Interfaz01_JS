@@ -73,6 +73,53 @@
             </div>
         </div>
     </div>
+
+
+
+    <div class="modal fade" id="modalEditarAlumno" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar Alumno</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>ID Alumno:</label>
+                        <input type="text" class="form-control" id="editIdAlumno" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>Nombre:</label>
+                        <input type="text" class="form-control" id="editNombre">
+                    </div>
+                    <div class="form-group">
+                        <label>Apellido Paterno:</label>
+                        <input type="text" class="form-control" id="editApPaterno">
+                    </div>
+                    <div class="form-group">
+                        <label>Apellido Materno:</label>
+                        <input type="text" class="form-control" id="editApMaterno">
+                    </div>
+                    <div class="form-group">
+                        <label>CURP:</label>
+                        <input type="text" class="form-control" id="editCurp">
+                    </div>
+                    <div class="form-group">
+                        <label>Fecha de Nacimiento:</label>
+                        <input type="date" class="form-control" id="editFechNac">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" onclick="guardarEdicionAlumno()">Guardar Cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
     
 
 

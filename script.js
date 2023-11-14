@@ -69,9 +69,7 @@ function llenarTabla(alumnos) {
 
 
 
-function editarAlumno(idAlumno) {
-    // Lógica para editar el alumno
-}
+
 
 function eliminarAlumno(idAlumno) {
     // Lógica para eliminar el alumno
@@ -159,5 +157,89 @@ async function modificarEstado(idAlumno) {
     })
     .catch(error => console.error('Error:', error));
 }
+
+
+async function editarAlumno(idAlumno) {
+    await solicitarToken();
+
+    fetch('http://localhost:50586/api/Alumnos/GetAlumnoID', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${jwtToken}`
+        },
+        body: JSON.stringify({ idAlumno: idAlumno, curp: "" })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data && data.respuesta && data.respuesta.length > 0) {
+            const alumno = data.respuesta[0];
+
+            // Convertir la fecha a formato yyyy-MM-dd
+            const fechaNacimiento = alumno.fechaNacimiento.split('/').reverse().join('-');
+
+            // Llenar los campos del modal con los datos del alumno
+            document.getElementById("editIdAlumno").value = alumno.idAlumno;
+            document.getElementById("editNombre").value = alumno.nombre;
+            document.getElementById("editApPaterno").value = alumno.apPaterno;
+            document.getElementById("editApMaterno").value = alumno.apMaterno;
+            document.getElementById("editCurp").value = alumno.curp;
+            document.getElementById("editFechNac").value = fechaNacimiento;
+            // Mostrar el modal
+            $('#modalEditarAlumno').modal('show');
+            console.log(alumno);
+        } else {
+            console.error('No se pudo obtener la información del alumno');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+async function guardarEdicionAlumno() {
+    await solicitarToken();
+
+    const alumnoModificado = {
+        idAlumno: document.getElementById("editIdAlumno").value,
+        nombre: document.getElementById("editNombre").value,
+        apPaterno: document.getElementById("editApPaterno").value,
+        apMaterno: document.getElementById("editApMaterno").value,
+        curp: document.getElementById("editCurp").value,
+        fechNac: document.getElementById("editFechNac").value.split('-').join('/') // Convertir de yyyy-MM-dd a dd/MM/yyyy
+    };
+
+    fetch('http://localhost:50586/api/Alumnos/EditarInfoAlumno', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${jwtToken}`
+        },
+        body: JSON.stringify(alumnoModificado)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.code && data.code === "00") {
+            // Éxito en la edición
+            $('#modalEditarAlumno').modal('hide');
+            limpiarModalEdicionAlumno(); // Limpia el modal después de cerrarlo
+            cargarAlumnos(); // Recargar la lista de alumnos
+        } else {
+            // Manejar respuesta de error
+            alert('Errores al modificar el alumno:\n' + data.respuesta.join('\n'));
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+function limpiarModalEdicionAlumno() {
+    document.getElementById("editIdAlumno").value = '';
+    document.getElementById("editNombre").value = '';
+    document.getElementById("editApPaterno").value = '';
+    document.getElementById("editApMaterno").value = '';
+    document.getElementById("editCurp").value = '';
+    document.getElementById("editFechNac").value = '';
+}
+
+
+
 
 
