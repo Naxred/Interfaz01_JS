@@ -1,7 +1,7 @@
 let jwtToken = '';
 
 function solicitarToken() {
-    fetch('http://localhost:50586/api/Autenticacion/Token', {
+    return fetch('http://localhost:50586/api/Autenticacion/Token', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -15,11 +15,18 @@ function solicitarToken() {
     .then(response => response.json())
     .then(data => {
         jwtToken = data.access_token;
+        return Promise.resolve();
     })
-    .catch(error => console.error('Error al solicitar el token:', error));
+    .catch(error => {
+        console.error('Error al solicitar el token:', error);
+        return Promise.reject(error);
+    });
 }
 
-function cargarAlumnos() {
+
+async function cargarAlumnos() {
+    await solicitarToken();
+
     fetch('http://localhost:50586/api/Alumnos/GetAll', {
         method: 'GET',
         headers: {
@@ -29,8 +36,6 @@ function cargarAlumnos() {
     .then(response => response.json())
     .then(data => llenarTabla(data.respuesta))
     .catch(error => console.error('Error:', error));
-
-    
 }
 
 function llenarTabla(alumnos) {
@@ -39,7 +44,8 @@ function llenarTabla(alumnos) {
 
     if (Array.isArray(alumnos)) {
         alumnos.forEach(alumno => {
-            const row = `<tr>
+            const colorFila = alumno.estado === 'Activo' ? 'table-success' : 'table-danger';
+            const row = `<tr class="${colorFila}">
                         <td>${alumno.idAlumno}</td>
                         <td>${alumno.nombre}</td>
                         <td>${alumno.apPaterno}</td>
@@ -48,9 +54,9 @@ function llenarTabla(alumnos) {
                         <td>${alumno.fechaNacimiento}</td>
                         <td>${alumno.estado}</td>
                         <td>
-                            <button class="btn btn-primary btn-sm" onclick="modificarEstado(${alumno.IdAlumno})">Modificar Estado</button>
-                            <button class="btn btn-secondary btn-sm" onclick="editarAlumno(${alumno.IdAlumno})">Editar</button>
-                            <button class="btn btn-danger btn-sm" onclick="eliminarAlumno(${alumno.IdAlumno})">Eliminar</button>
+                            <button class="btn btn-primary btn-sm" onclick="modificarEstado(${alumno.idAlumno})">Modificar Estado</button>
+                            <button class="btn btn-secondary btn-sm" onclick="editarAlumno(${alumno.idAlumno})">Editar</button>
+                            <button class="btn btn-danger btn-sm" onclick="eliminarAlumno(${alumno.idAlumno})">Eliminar</button>
                         </td>
                      </tr>`;
             tableBody.innerHTML += row;
@@ -60,9 +66,8 @@ function llenarTabla(alumnos) {
     }
 }
 
-function modificarEstado(idAlumno) {
-    // Lógica para modificar el estado del alumno
-}
+
+
 
 function editarAlumno(idAlumno) {
     // Lógica para editar el alumno
@@ -73,13 +78,15 @@ function eliminarAlumno(idAlumno) {
 }
 
 // Solicitar token y cargar alumnos al iniciar la página
-window.onload = function() {
-    solicitarToken();
-    setTimeout(cargarAlumnos, 1000); // Esperar a que el token esté listo
+window.onload = async function() {
+    await cargarAlumnos();
 };
 
 
-function guardarAlumno() {
+async function guardarAlumno() {
+
+    await solicitarToken();
+
     const alumno = {
         idAlumno: 0, // Asumiendo que es un nuevo alumno y la API asigna el ID
         nombre: document.getElementById('nombre').value,
@@ -121,6 +128,36 @@ function limpiarModalNuevoAlumno() {
     document.getElementById('apMaterno').value = '';
     document.getElementById('curp').value = '';
     document.getElementById('fechNac').value = '';
+}
+
+
+async function modificarEstado(idAlumno) {
+    await solicitarToken();
+
+    const datos = {
+        idAlumno: idAlumno,
+        curp: "" // Parece que este campo no es necesario para este endpoint
+    };
+
+    fetch('http://localhost:50586/api/Alumnos/CambiaEstadoAlumno', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${jwtToken}`
+        },
+        body: JSON.stringify(datos)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.codigo && data.codigo === "00") {
+            // Si la respuesta es exitosa, recargar la lista de alumnos
+            cargarAlumnos();
+        } else {
+            // Manejar otras respuestas o errores
+            alert("Error al modificar el estado del alumno.");
+        }
+    })
+    .catch(error => console.error('Error:', error));
 }
 
 
